@@ -1,17 +1,13 @@
 import tensorflow as tf
-#print("Versão do TensorFlow:", tf.__version__)
-
 import keras as K
-#print("Versão do Keras:", K.__version__)
-
-# Imports
 from keras.models import Sequential
 from keras.layers import Conv2D
 from keras.layers import MaxPooling2D
 from keras.layers import Flatten
 from keras.layers import Dense
 from tensorflow.keras.callbacks import ModelCheckpoint
-import scipy # This is new!
+import scipy 
+from keras.preprocessing.image import ImageDataGenerator
 from keras.preprocessing.image import ImageDataGenerator
 import os
 
@@ -36,8 +32,6 @@ classifier.add(Dense(units = 1, activation = 'sigmoid'))
 classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
 
 # Criando os objetos train_datagen e validation_datagen com as regras de pré-processamento das imagens
-from keras.preprocessing.image import ImageDataGenerator
-
 train_datagen = ImageDataGenerator(rescale = 1./255,
                                    shear_range = 0.2,
                                    zoom_range = 0.2,
@@ -61,21 +55,13 @@ validation_set = validation_datagen.flow_from_directory(val_folder,
                                                         batch_size = 32,
                                                         class_mode = 'binary')
 
-# specify the path where you want to save the model
+# especificando a pasta onde irei salvar o model
 filepath = current_dir + "\\best_model.hdf5"
 
 # initialize the ModelCheckpoint callback
 checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
 
 classifier.save(current_dir + "\\best_model.hdf5")
-
-callbacks = [
-    ModelCheckpoint(
-        filepath="model3.keras",
-        save_best_only=True,
-        monitor="val_loss"
-    )
-]
 
 # Executando o treinamento (esse processo pode levar bastante tempo, dependendo do seu computador)
 classifier.fit_generator(training_set,
@@ -84,7 +70,7 @@ classifier.fit_generator(training_set,
                          validation_data = validation_set,
                          validation_steps = 2000)
 
-# Primeira Imagem
+# Testes
 import numpy as np
 from keras.preprocessing import image
 from tensorflow import keras
@@ -102,7 +88,7 @@ else:
     prediction = 'Alcides'
 
 # Previsão da primeira imagem
-prediction
+print(prediction)
 
 # Segunda Imagem
 test_image = image.load_img('alcides_and_nagibe_dataset/test/alcides/alcides.10.JPG', target_size = (64, 64))
@@ -118,7 +104,7 @@ else:
     prediction = 'Alcides'
 
 # Previsão da segunda imagem
-prediction
+print(prediction)
 
 # Terceira Imagem
 test_image = image.load_img('alcides_and_nagibe_dataset/test/nagibe/nagibe2.PNG', target_size = (64, 64))
@@ -133,5 +119,5 @@ if result[0][0] == 1:
 else:
     prediction = 'Nagibe'
 
-# Previsão da segunda imagem
-prediction
+# Previsão da terceira imagem
+print(prediction)
